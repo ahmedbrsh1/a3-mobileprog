@@ -27,7 +27,7 @@ Weather Checker is a Flutter mobile application that allows users to search for 
 1. Clone the repository:
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/ahmedbrsh1/a3-mobileprog>
 cd <project-folder>
 ```
 
@@ -46,8 +46,6 @@ class Config {
   static const String apiKey = 'YOUR_API_KEY_HERE';
 }
 ```
-
-Make sure config.dart is ignored in .gitignore to keep your API key private.
 
 Run the app:
 
