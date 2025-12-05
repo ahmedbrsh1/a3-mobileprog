@@ -10,28 +10,29 @@ class SettingsPage extends StatelessWidget {
     final provider = Provider.of<WeatherProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Preferences'),
-        backgroundColor: Colors.teal,
-        elevation: 2,
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 3,
-          child: ListView(
-            children: [
-              // Toggle between Celsius and Fahrenheit
-              SwitchListTile(
-                title: const Text('Metric Units (°C)'),
-                subtitle: Text(provider.isCelsius ? 'Currently: Celsius' : 'Currently: Fahrenheit'),
+        child: Column(
+          children: [
+            Card(
+              elevation: 2,
+              child: SwitchListTile(
+                title: const Text('Use Metric Units (°C)'),
+                subtitle: Text(
+                  provider.isCelsius
+                      ? 'Current: Celsius'
+                      : 'Current: Fahrenheit',
+                ),
                 value: provider.isCelsius,
-                activeColor: Colors.teal,
                 onChanged: (value) => provider.toggleUnit(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

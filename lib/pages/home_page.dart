@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _controller = TextEditingController();
 
-  // Trigger weather search for entered city
   void _searchWeather() async {
     if (_controller.text.isEmpty) return;
     FocusScope.of(context).unfocus();
@@ -29,33 +28,29 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => const DetailsPage()),
       );
     } else if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(provider.error ?? 'Failed to fetch weather')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(provider.error ?? 'Error')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text(
-          'Weather Checker',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: const Text('Weather Checker'),
+        backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite, color: Colors.white),
+            icon: const Icon(Icons.favorite),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FavoritesPage()),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
+            icon: const Icon(Icons.settings),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SettingsPage()),
@@ -63,75 +58,45 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF6A11CB), Color(0xFF2575FC)], // Updated modern purple-blue gradient
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Main weather icon
-              const Icon(Icons.cloud_queue_rounded, size: 120, color: Colors.white70),
-              const SizedBox(height: 20),
-              
-              const Text(
-                "Discover Weather",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Large icon at top left
+            Align(
+              alignment: Alignment.topLeft,
+              child: Icon(
+                Icons.cloud,
+                size: 120,
+                color: Colors.blueAccent.shade100,
               ),
-              const SizedBox(height: 35),
-
-              // Search bar container
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    )
-                  ],
+            ),
+            const SizedBox(height: 20),
+            // Search input
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Enter city name...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
                 ),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Type city name (e.g., London)',
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search, color: Color(0xFF6A11CB)),
-                      onPressed: _searchWeather,
-                    ),
-                  ),
-                  onSubmitted: (_) => _searchWeather(),
-                ),
+                filled: true,
+                fillColor: Colors.white,
               ),
-
-              // Show loading indicator when fetching weather
-              Consumer<WeatherProvider>(
-                builder: (context, provider, child) {
-                  if (provider.isLoading) {
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 25),
-                      child: CircularProgressIndicator(color: Colors.white),
-                    );
-                  }
-                  return const SizedBox();
-                },
-              ),
-            ],
-          ),
+              onSubmitted: (_) => _searchWeather(),
+            ),
+            const SizedBox(height: 20),
+            // Loading indicator
+            Consumer<WeatherProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const CircularProgressIndicator();
+                }
+                return const SizedBox();
+              },
+            ),
+          ],
         ),
       ),
     );

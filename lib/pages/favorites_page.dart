@@ -12,46 +12,37 @@ class FavoritesPage extends StatelessWidget {
     final favorites = provider.favorites;
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('My Favorite Cities'),
-        backgroundColor: Colors.teal,
-        elevation: 2,
+        title: const Text('Saved Cities'),
+        backgroundColor: Colors.blueAccent,
       ),
       body: favorites.isEmpty
-          ? const Center(
-              child: Text(
-                'You haven’t added any favorites yet.',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+          ? const Center(child: Text('No saved favorites yet.'))
+          : ListView.builder(
               itemCount: favorites.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final city = favorites[index];
-
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    title: Text(
-                      city,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    leading: const Icon(
+                      Icons.location_city,
+                      color: Colors.blueAccent,
                     ),
-                    leading: const Icon(Icons.location_city, color: Colors.teal),
+                    title: Text(city),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () async {
-                      // Fetch weather for selected city
                       await provider.fetchWeather(city);
-
-                      // Navigate to details page if no error occurred
                       if (context.mounted && provider.error == null) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const DetailsPage()),
+                          MaterialPageRoute(
+                            builder: (context) => const DetailsPage(),
+                          ),
                         );
                       }
                     },
